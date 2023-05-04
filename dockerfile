@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 		build-essential \
 		software-properties-common
 
-install python packages
+#install python packages
 RUN apt-get update && apt-get install -y \
 		python3.10 \
 		python3-pip 
@@ -28,15 +28,13 @@ RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
 # Download image processing Python code
 RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
 
-RUN python3 -m pip install -r dashWebApp/requirements.txt
+# # RUN python3 -m pip install -r dashWebApp/requirements.txt
 # RUN python3 -m pip install -r imageProcessing/requirements.txt
-
-
-ENV DASH_DEBUG_MODE False
 COPY ./app /app
 WORKDIR /app
-RUN set -ex && \
-    pip install -r requirements.txt
+RUN python3 -m pip install --ignore-installed -r requirements.txt
+ENV DASH_DEBUG_MODE False
+
 EXPOSE 8050
 CMD ["gunicorn", "-b", "0.0.0.0:8050", "--reload", "app:server"]
 
@@ -61,13 +59,3 @@ CMD ["gunicorn", "-b", "0.0.0.0:8050", "--reload", "app:server"]
 # USER foam
 
 
-
-FROM python:3.10
-
-ENV DASH_DEBUG_MODE False
-COPY ./app /app
-WORKDIR /app
-RUN set -ex && \
-    pip install -r requirements.txt
-EXPOSE 8050
-CMD ["gunicorn", "-b", "0.0.0.0:8050", "--reload", "app:server"]
