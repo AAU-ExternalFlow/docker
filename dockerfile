@@ -1,34 +1,46 @@
-FROM ubuntu:focal
+# FROM ubuntu:focal
 
-ENV DEBIAN_FRONTEND=noninteractive
+# ENV DEBIAN_FRONTEND=noninteractive
 
-ENV TZ=Europe/Copenhagen
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# ENV TZ=Europe/Copenhagen
+# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# install essentials
-RUN apt-get update && apt-get install -y \
-		sudo \
-		wget \
-		nano \
-		git \
-		build-essential \
-		software-properties-common
+# # install essentials
+# RUN apt-get update && apt-get install -y \
+# 		sudo \
+# 		wget \
+# 		nano \
+# 		git \
+# 		build-essential \
+# 		software-properties-common
 
 # install python packages
-RUN apt-get update && apt-get install -y \
-		python3.10 \
-		python3-pip
-
-RUN pip install --upgrade pip
+# RUN apt-get update && apt-get install -y \
+# 		python3.10 \
+# 		python3-pip 
 		
-# Download dash web application
-RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
 
-# Download image processing Python code
-RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
+# RUN pip install --upgrade pip
+		
+# # Download dash web application
+# RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
 
-RUN python3 -m pip install -r dashWebApp/requirements.txt
-RUN python3 -m pip install -r imageProcessing/requirements.txt
+# # Download image processing Python code
+# RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
+
+# RUN python3 -m pip install -r dashWebApp/requirements.txt
+# # RUN python3 -m pip install -r imageProcessing/requirements.txt
+
+
+# RUN mkdir wd
+# WORKDIR wd
+# COPY app/requirements.txt .
+# RUN pip3 install -r requirements.txt
+
+# COPY app/ ./
+# EXPOSE 8050
+# CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:80", "app:server"]
+
 
 # # download openfoam
 # RUN wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash ;\
@@ -48,3 +60,15 @@ RUN python3 -m pip install -r imageProcessing/requirements.txt
 
 # # change user to "foam"
 # USER foam
+
+
+
+FROM python:3.10
+
+ENV DASH_DEBUG_MODE False
+COPY ./app /app
+WORKDIR /app
+RUN set -ex && \
+    pip install -r requirements.txt
+EXPOSE 8050
+CMD ["gunicorn", "-b", "0.0.0.0:8050", "--reload", "app:server"]
