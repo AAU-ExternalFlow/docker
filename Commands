@@ -1,2 +1,0 @@
-docker image build -t externalflow .
-docker container run -p 8050:8050 --rm externalflow

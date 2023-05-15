@@ -20,86 +20,32 @@ server = app.server
 
 
 
-# data = pd.DataFrame(
-#     {
-#         "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-#         "Amount": [4, 1, 2, 2, 4, 5],
-#         "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"],
-#     }
-# )
-
-# graph = px.bar(data, x="Fruit", y="Amount", color="City", barmode="group")
-
-# 1) configure the upload folder
-# du.configure_upload(app, r"C:\tmp\Uploads")
 du.configure_upload(app, UPLOAD_DIRECTORY)
 
-# app.layout = html.Div([
-#     du.Upload(
-#         id='dash-uploader',
-#     ),
-#     html.Div(id='output')
-#     # html.Div(id='dash-uploader'),
-# ])
 
-img_element = html.Img(src=f"/uploads/{newest_folder}/{newest_file}")
+#Path to temporary folder
+path = "/app/uploads"
+#Looks through all directories and finds the most recently modified one
+directories = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
+most_recent_directory = max(directories, key=lambda d: os.path.getmtime(os.path.join(path, d)))
+
+#Find the most recently modified file in the most recent directory
+files = [(f, os.path.getmtime(os.path.join(path, most_recent_directory, f))) for f in os.listdir(os.path.join(path, most_recent_directory)) if os.path.isfile(os.path.join(path, most_recent_directory, f))]
+most_recent_file = max(files, key=lambda f: f[1])[0]
+
+#Set the path to the most recently modified file in the most recent directory
+file_path = os.path.join(path, most_recent_directory, most_recent_file)
+
+#Image decoding
+test_base64 = base64.b64encode(open(file_path, 'rb').read()).decode('ascii')
 
 app.layout = html.Div([
     du.Upload(),
-    html.Div(id='output')
+    # html.Div(id='output'),
+    html.H1(children=file_path,className="hello"),
+    html.Img(src='data:file_path;base64,{}'.format(test_base64)),
 ])
 
-
-#Her forsøges at finde den nyeste uploaded fil i tmp/uploads
-@app.callback(Output('output', 'children'), [Input('upload', 'contents')])
-def display_image(contents):
-    if contents is not None:
-        # get file extension
-        file_extension = contents.split(";")[0].split("/")[-1]
-        # generate a unique file name
-        file_name = f"upload_{uuid.uuid4().hex}.{file_extension}"
-        # save the file to the upload directory
-        with open(os.path.join(UPLOAD_DIRECTORY, file_name), "wb") as f:
-            f.write(base64.b64decode(contents.split(",")[1]))
-        # get the name of the newest folder in the upload directory
-        newest_folder = max(os.listdir(UPLOAD_DIRECTORY), key=os.path.getmtime)
-        # get the name of the newest .jpg file inside the newest folder
-        newest_file = max(os.listdir(os.path.join(UPLOAD_DIRECTORY, newest_folder)), key=os.path.getmtime)
-        # check if the newest file is a .jpg
-        if newest_file.endswith(".jpg"):
-            # create and return img element with the newest file as src attribute
-            return html.Img(src=f"/uploads/{newest_folder}/{newest_file}")
-        else:
-            return html.Div()
-    else:
-        return html.Div()
-
-# def parse_contents(contents, filename, date):
-#     return html.Div([
-#         html.H5(filename),
-#         html.H6(datetime.datetime.fromtimestamp(date)),
-
-#         # HTML images accept base64 encoded strings in the same format
-#         # that is supplied by the upload
-#         html.Img(src=contents),
-#         html.Hr(),
-#         html.Div('Raw Content'),
-#         html.Pre(contents[0:200] + '...', style={
-#             'whiteSpace': 'pre-wrap',
-#             'wordBreak': 'break-all'
-#         })
-#     ])
-
-# @app.callback(Output('output-image-upload', 'children'),
-#               Input('upload-image', 'contents'),
-#               State('upload-image', 'filename'),
-#               State('upload-image', 'last_modified'))
-# def update_output(list_of_contents, list_of_names, list_of_dates):
-#     if list_of_contents is not None:
-#         children = [
-#             parse_contents(c, n, d) for c, n, d in
-#             zip(list_of_contents, list_of_names, list_of_dates)]
-#         return children
 
 
 if __name__ == "__main__":
