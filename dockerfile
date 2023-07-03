@@ -14,21 +14,35 @@ RUN apt-get update && apt-get install -y \
 		build-essential \
 		software-properties-common
 
-# install python packages
+#install python packages
 RUN apt-get update && apt-get install -y \
 		python3.10 \
-		python3-pip
+		python3-pip 
+		
 
 RUN pip install --upgrade pip
-		
+
+ARG CACHEBUST=1
 # Download dash web application
 RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
 
 # Download image processing Python code
 RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
 
-RUN python3 -m pip install -r dashWebApp/requirements.txt
-RUN python3 -m pip install -r imageProcessing/requirements.txt
+# # RUN python3 -m pip install -r dashWebApp/requirements.txt
+# RUN python3 -m pip install -r imageProcessing/requirements.txt
+# COPY ./app /app
+# WORKDIR /app
+# COPY ./dashWebApp /dashWebApp
+WORKDIR /dashWebApp
+RUN python3 -m pip install --ignore-installed -r requirements.txt
+RUN pip install --upgrade aerosandbox
+
+ENV DASH_DEBUG_MODE False
+
+EXPOSE 8050
+CMD ["gunicorn", "-b", "0.0.0.0:8050", "--reload", "app:server"]
+
 
 # # download openfoam
 # RUN wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash ;\
@@ -48,3 +62,5 @@ RUN python3 -m pip install -r imageProcessing/requirements.txt
 
 # # change user to "foam"
 # USER foam
+
+
