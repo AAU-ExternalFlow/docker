@@ -29,11 +29,7 @@ RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
 # Download image processing Python code
 RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
 
-# # RUN python3 -m pip install -r dashWebApp/requirements.txt
-# RUN python3 -m pip install -r imageProcessing/requirements.txt
-# COPY ./app /app
-# WORKDIR /app
-# COPY ./dashWebApp /dashWebApp
+
 WORKDIR /dashWebApp
 RUN python3 -m pip install --ignore-installed -r requirements.txt
 RUN pip install --upgrade aerosandbox
