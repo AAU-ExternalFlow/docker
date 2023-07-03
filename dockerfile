@@ -21,7 +21,8 @@ RUN apt-get update && apt-get install -y \
 		
 
 RUN pip install --upgrade pip
-		
+
+ARG CACHEBUST=1
 # Download dash web application
 RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
 
@@ -30,9 +31,13 @@ RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
 
 # # RUN python3 -m pip install -r dashWebApp/requirements.txt
 # RUN python3 -m pip install -r imageProcessing/requirements.txt
-COPY ./app /app
-WORKDIR /app
+# COPY ./app /app
+# WORKDIR /app
+# COPY ./dashWebApp /dashWebApp
+WORKDIR /dashWebApp
 RUN python3 -m pip install --ignore-installed -r requirements.txt
+RUN pip install --upgrade aerosandbox
+
 ENV DASH_DEBUG_MODE False
 
 EXPOSE 8050
