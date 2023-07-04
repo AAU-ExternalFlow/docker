@@ -7,17 +7,23 @@ from dash import Dash, html, dcc, dash_table
 from dash.dependencies import Input, Output, State
 import plotly.express as pu
 import pandas as pd
-# import dash_uploader as du
-import logging  # Add this line
+import dash_bootstrap_components as dbc
+
 
 
 UPLOAD_DIRECTORY = "/app/uploads"
+
+checklist_options = [
+    {'label': '0degrees', 'value': '0d'},
+    {'label': '5degrees', 'value': '5d'},
+    {'label': '10degrees', 'value': '10d'}
+]
 
 debug = False if os.environ["DASH_DEBUG_MODE"] == "False" else True
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = Dash(__name__)
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 
 server = app.server
@@ -52,12 +58,33 @@ app.layout = html.Div([
     ], style={'width': '49%', 'padding': 10, 'flex': 1}),
 
     html.Div(children=[
-        html.Label('checklistAOA'),
+        html.Label('checklistAOA:'),
+        html.Br(),
         dcc.Checklist(
-            ['0 degrees', '5 degrees', '10 degrees']
-            )
-    ])
+            id='checklistAOA',
+            options=[
+                {'label': '0degrees', 'value': '0d'},
+                {'label': '5degrees', 'value': '5d'},
+                {'label': '10degrees', 'value': '10d'} 
+            ],
+            value=[]
+        ),
+        html.Div(id='outputAOA'),
+        html.Div(id='output-message')
+    ]),
 
+    html.Div(children=[
+        dbc.Button("Legacy", id="dropdown", color="primary", n_clicks=0),
+        dbc.Popover(
+            [
+                dbc.PopoverHeader("Popover header"),
+                dbc.PopoverBody("And here's some amazing content. Cool!"),
+            ],
+            id="popover",
+            is_open=False,
+            target="dropdown",
+        ),
+    ]),
 ], style={'display': 'flex', 'flex-direction': 'row'})
 
 def parse_contents(contents, filename, date):
@@ -111,7 +138,37 @@ def analyze_image(n_clicks, contents):
         #Return the image in the output div
         return html.Img(src=contents, style={'width': '100%'})
 
+@app.callback(
+    Output('output-message', 'children'),
+    [Input('checklistAOA', 'value')],
+    prevent_initial_call=True
+)
+def save_checklist(checkbox_values):
+    if checkbox_values:
+        # Save the checklist as a text file
+        filename = 'checklist.txt'
+        file_path = os.path.join(UPLOAD_DIRECTORY, filename)
 
+        #Sort the checklist values in the same order as the options
+        sorted_values = sorted(checkbox_values, key=lambda x: [option['value'] for option in checklist_options].index(x))
+
+        with open(file_path, 'w') as f:
+            f.write('\n'.join(sorted_values))
+
+        print('Checklist saved:', file_path)
+
+        # Return a success message
+        return html.Div('Checklist saved successfully.')
+
+@app.callback(
+    Output("popover", "is_open"),
+    [Input("dropdown", "n_clicks")],
+    [State("popover", "is_open")],
+)
+def toggle_popover(n, is_open):
+    if n:
+        return not is_open
+    return is_open
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="8050", debug=debug)
