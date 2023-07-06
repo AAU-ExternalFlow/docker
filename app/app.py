@@ -33,6 +33,18 @@ app.layout = html.Div([
             # html.Br(),
             dbc.Row([
                 dbc.Col([
+                    dcc.Markdown("""
+                        # [External Flow AAU Energy](https://externalflow.energy.aau.dk/)
+                        By [Jakob Hærvig](https://haervig.com/) and Victor Hvass Mølbak.
+                    """)
+                ], width=True),
+                dbc.Col([
+                    html.Img(src="externalFlow.jpg", alt="External Flow Logo", height="30px"),
+                ], width=1)
+            ], align="end"),
+            html.Hr(),
+            dbc.Row([
+                dbc.Col([
                     dbc.Card(
                         dbc.CardBody(
                             uploadImage,
@@ -55,15 +67,16 @@ app.layout = html.Div([
                         is_open=False
                     ),
 
-                    dbc.Button(
-                        "Image Processing",
-                        id="button_imageProcessing",
-                        n_clicks=0,
-                    ),
+                    dbc.Button( "Image Processing", id="button_imageProcessing", n_clicks=0),
                     dbc.Popover(
                         [
-                            dbc.PopoverHeader("Popover header"),
-                            dbc.PopoverBody("And here's some amazing content. Cool!"),
+                            dbc.PopoverHeader("Image processing steps"),
+                            dbc.PopoverBody(dbc.Row([
+                                dbc.Col([
+                                    "image here",
+                                    html.Img(src="app/placeholder_image.png"),
+                                ])
+                            ])),
                         ],
                         id="popover_imageProcessing",
                         # is_open=False,
@@ -72,31 +85,7 @@ app.layout = html.Div([
                         placement="bottom",
                         trigger="legacy",
                     ),
-                    dbc.Button("Legacy", id="legacy-target", color="danger", n_clicks=0),
-                    dbc.Popover(
-                        children=[
-                            dbc.PopoverHeader(
-                                dbc.Row([
-                                    "Choose:  ",
-                                    dbc.Select(
-                                        placeholder="Choose option",
-                                        id={"type": "div-popover-dropdown", "index": 2},
-                                        options=[
-                                            {"label": "Option 1", "value": "1"},
-                                            {"label": "Option 2", "value": "2"},
-                                        ],
-                                    )
-                                ])
-                            ),
-                            dbc.PopoverBody("Body content"),
-                        ],
-                        placement="bottom",
-                        id="legacy",
-                        target="legacy-target",
-                        trigger="legacy",
-                    ),
-
-
+                    
                 ], width=4)
             ], align='center')
         ])
@@ -198,6 +187,7 @@ def parse_contents(contents, filename, date):
     ])
 
 @app.callback(Output('output-image-upload', 'children'),
+              Output('output-image-upload2', 'children'),
               Input('upload-image', 'contents'),
               State('upload-image', 'filename'),
               State('upload-image', 'last_modified'))
