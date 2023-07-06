@@ -9,7 +9,7 @@ import plotly.express as pu
 import pandas as pd
 import dash_bootstrap_components as dbc
 
-
+from app_components import *
 
 UPLOAD_DIRECTORY = "/app/uploads"
 
@@ -27,80 +27,174 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 
 server = app.server
-
 app.layout = html.Div([
-    html.Div(children=[
-        dcc.Upload(
-            id='upload-image',
-            children=html.Div([
-                'Drag and Drop or ',
-                html.A('Select Files')
-            ]),
-            style={
-                'width': '100%',
-                'height': '60px',
-                'lineHeight': '60px',
-                'borderWidth': '1px',
-                'borderStyle': 'dashed',
-                'borderRadius': '5px',
-                'textAlign': 'center',
-                'margin': '10px'
-            },
-            # Allow multiple files to be uploaded
-            multiple=False
-        ),
-        html.Div(id='output-image-upload'),
-    ], style={'width': '49%', 'padding': 10, 'flex': 1}),
+    dbc.Card(
+        dbc.CardBody([
+            # html.Br(),
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card(
+                        dbc.CardBody(
+                            uploadImage,
+                        ),
+                        className="border-0 bg-transparent"
+                    ),
 
-    html.Div(children=[
-        html.Button('Analyze Image', id='analyze-button', n_clicks=0),
-        html.Div(id='output-image')
-    ], style={'width': '49%', 'padding': 10, 'flex': 1}),
+                    # html.Hr(),
+                    dbc.Button(
+                        "Angle of Attack",
+                        id="button_AOA"
+                    ),
+                    dbc.Collapse(
+                        dbc.Card(
+                            dbc.CardBody(
+                                AOA_checklist,
+                            )
+                        ),
+                        id="collapse_AOA",
+                        is_open=False
+                    ),
 
-    html.Div(children=[
-        html.Label('checklistAOA:'),
-        html.Br(),
-        dcc.Checklist(
-            id='checklistAOA',
-            options=[
-                {'label': '0degrees', 'value': '0d'},
-                {'label': '5degrees', 'value': '5d'},
-                {'label': '10degrees', 'value': '10d'} 
-            ],
-            value=[]
-        ),
-        html.Div(id='outputAOA'),
-        html.Div(id='output-message')
-    ]),
+                    dbc.Button(
+                        "Image Processing",
+                        id="button_imageProcessing",
+                        n_clicks=0,
+                    ),
+                    dbc.Popover(
+                        [
+                            dbc.PopoverHeader("Popover header"),
+                            dbc.PopoverBody("And here's some amazing content. Cool!"),
+                        ],
+                        id="popover_imageProcessing",
+                        # is_open=False,
+                        target="button_imageProcessing",
+                        # body=True,
+                        placement="bottom",
+                        trigger="legacy",
+                    ),
+                    dbc.Button("Legacy", id="legacy-target", color="danger", n_clicks=0),
+                    dbc.Popover(
+                        children=[
+                            dbc.PopoverHeader(
+                                dbc.Row([
+                                    "Choose:  ",
+                                    dbc.Select(
+                                        placeholder="Choose option",
+                                        id={"type": "div-popover-dropdown", "index": 2},
+                                        options=[
+                                            {"label": "Option 1", "value": "1"},
+                                            {"label": "Option 2", "value": "2"},
+                                        ],
+                                    )
+                                ])
+                            ),
+                            dbc.PopoverBody("Body content"),
+                        ],
+                        placement="bottom",
+                        id="legacy",
+                        target="legacy-target",
+                        trigger="legacy",
+                    ),
 
-    html.Div(children=[
-        dbc.Button("Legacy", id="dropdown", color="primary", n_clicks=0),
-        dbc.Popover(
-            [
-                dbc.PopoverHeader("Popover header"),
-                dbc.PopoverBody("And here's some amazing content. Cool!"),
-            ],
-            id="popover",
-            is_open=False,
-            target="dropdown",
-        ),
-    ]),
-], style={'display': 'flex', 'flex-direction': 'row'})
+
+                ], width=4)
+            ], align='center')
+        ])
+    )
+
+
+
+
+])
+
+
+
+# app.layout = html.Div([
+#     html.Div(children=[
+#         dcc.Upload(
+#             id='upload-image',
+#             children=html.Div([
+#                 'Drag and Drop or ',
+#                 html.A('Select Files')
+#             ]),
+#             style={
+#                 'width': '100%',
+#                 'height': '60px',
+#                 'lineHeight': '60px',
+#                 'borderWidth': '1px',
+#                 'borderStyle': 'dashed',
+#                 'borderRadius': '5px',
+#                 'textAlign': 'center',
+#                 'margin': '10px'
+#             },
+#             # Allow multiple files to be uploaded
+#             multiple=False
+#         ),
+#         html.Div(id='output-image-upload'),
+#     ], style={'width': '49%', 'padding': 10, 'flex': 1}),
+
+#     html.Div(children=[
+#         html.Button('Analyze Image', id='analyze-button', n_clicks=0),
+#         html.Div(id='output-image')
+#     ], style={'width': '49%', 'padding': 10, 'flex': 1}),
+
+#     html.Div(children=[
+#         html.Label('checklistAOA:'),
+#         html.Br(),
+#         dcc.Checklist(
+#             id='checklistAOA',
+#             options=[
+#                 {'label': '0degrees', 'value': '0d'},
+#                 {'label': '5degrees', 'value': '5d'},
+#                 {'label': '10degrees', 'value': '10d'} 
+#             ],
+#             value=[]
+#         ),
+#         html.Div(id='outputAOA'),
+#         html.Div(id='output-message')
+#     ]),
+
+#     html.Div(children=[
+#         dbc.Button("Legacy", id="dropdown", color="primary", n_clicks=0),
+#         dbc.Popover(
+#             [
+#                 dbc.PopoverHeader("Popover header"),
+#                 dbc.PopoverBody("And here's some amazing content. Cool!"),
+#             ],
+#             id="popover",
+#             is_open=False,
+#             target="dropdown",
+#         ),
+#     ]),
+# ], style={'display': 'flex', 'flex-direction': 'row'})
+
+#Callback to expand AOA menu.
+@app.callback(
+    Output("collapse_AOA", "is_open"),
+    [Input("button_AOA", "n_clicks")],
+    [State("collapse_AOA", "is_open")]
+)
+def toggle_shape_collapse(n_clicks, is_open):
+    if n_clicks:
+        return not is_open
+    return is_open
+
+
 
 def parse_contents(contents, filename, date):
     return html.Div([
         html.H5(filename),
-        html.H6(datetime.datetime.fromtimestamp(date)),
+        # html.H6(datetime.datetime.fromtimestamp(date)),
 
         # HTML images accept base64 encoded strings in the same format
         # that is supplied by the upload
         html.Img(src=contents, style={'width': '100%'}),
         html.Hr(),
-        html.Div('Raw Content'),
-        html.Pre(contents[0:200] + '...', style={
-            'whiteSpace': 'pre-wrap',
-            'wordBreak': 'break-all'
-        })
+        # html.Div('Raw Content'),
+        # html.Pre(contents[0:200] + '...', style={
+            # 'whiteSpace': 'pre-wrap',
+            # 'wordBreak': 'break-all'
+        # })
     ])
 
 @app.callback(Output('output-image-upload', 'children'),
@@ -145,7 +239,7 @@ def analyze_image(n_clicks, contents):
 )
 def save_checklist(checkbox_values):
     if checkbox_values:
-        # Save the checklist as a text file
+        #Save the checklist as a text file
         filename = 'checklist.txt'
         file_path = os.path.join(UPLOAD_DIRECTORY, filename)
 
@@ -155,20 +249,17 @@ def save_checklist(checkbox_values):
         with open(file_path, 'w') as f:
             f.write('\n'.join(sorted_values))
 
-        print('Checklist saved:', file_path)
 
-        # Return a success message
-        return html.Div('Checklist saved successfully.')
 
-@app.callback(
-    Output("popover", "is_open"),
-    [Input("dropdown", "n_clicks")],
-    [State("popover", "is_open")],
-)
-def toggle_popover(n, is_open):
-    if n:
-        return not is_open
-    return is_open
+# @app.callback(
+#     Output("popover_imageProcessing", "is_open"),
+#     [Input("button_imageProcessing", "n_clicks")],
+#     [State("popover_imageProcessing", "is_open")],
+# )
+# def toggle_popover(n, is_open):
+#     if n:
+#         return not is_open
+#     return is_open
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="8050", debug=debug)

@@ -35,9 +35,9 @@ COPY ./app /app
 WORKDIR /app
 # COPY ./dashWebApp /dashWebApp
 # WORKDIR /dashWebApp
-RUN python3 -m pip install --ignore-installed -r requirements.txt
-RUN pip install --upgrade aerosandbox
-
+RUN python3 -m pip install -r requirements.txt 
+# RUN pip install --upgrade aerosandbox
+# --ignore-installed
 ENV DASH_DEBUG_MODE False
 
 EXPOSE 8050
