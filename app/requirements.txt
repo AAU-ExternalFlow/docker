@@ -3,3 +3,4 @@ dash>= 1.19.0
 gunicorn>=20.0.4
 pandas>=2.0.1
 dash-bootstrap-components
+pillow

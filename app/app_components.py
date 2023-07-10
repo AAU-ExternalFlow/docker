@@ -23,6 +23,7 @@ uploadImage = [
             multiple=False
         ),
         html.Div(id='output-image-upload'),
+        # html.Img(id="output-image-upload", style={'max-width': '100%', 'max-height': '600px', 'width': 'auto', 'height': 'auto'}),
     ]),
 ]
 

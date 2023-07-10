@@ -2,8 +2,7 @@
 docker image build -t externalflow .
 
 #Running docker container with local volume at c:/tmp/uploads
-docker container run -v C:/tmp/Uploads:/app/uploads -p 8050:8050 --rm externalflow
+docker container run -v $HOME/tmp/Uploads:/app/uploads -p 8050:8050 --rm externalflow
 
 Image build with python cached.
-docker image build --build-arg CACHEBUST=$(powershell -Command "[System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds()") -t externalflow 
-.
+docker image build --build-arg CACHEBUST=$(powershell -Command "[System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds()") -t externalflow .
