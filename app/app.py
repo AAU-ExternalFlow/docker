@@ -26,7 +26,7 @@ debug = False if os.environ["DASH_DEBUG_MODE"] == "False" else True
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 # app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, 'bootstrap.css'])
-app = Dash(__name__,)
+app = Dash(__name__)
 
 image_path = 'externalFlow.jpg'
 
@@ -50,64 +50,45 @@ app.layout = html.Div([
                     """)
                 ], width=True),
                 dbc.Col([
-                    # html.Img(src="externalFlow.jpg", alt="External Flow Logo", height="30px"),
                     html.Img(src=b64_image(image_path), height="80px"),
-                ], width=1)
+                ], width=1.7)
             ], align="end"),
 
             html.Hr(),
 
             dbc.Row([
                 dbc.Col([
-                    dbc.Card(
+                    dbc.Card([
                         dbc.CardBody(
                             uploadImage,
                         ),
-                        # className="border-0 bg-transparent"
-                    ),
-
-                    # html.Hr(),
-                    dbc.Button(
-                        "Angle of Attack",
-                        id="button_AOA"
-                    ),
-                    dbc.Collapse(
-                        dbc.Card(
-                            dbc.CardBody(
-                                AOA_checklist,
-                            )
+                        dbc.Button("Angrebsvinkel", id="button_AOA", style={'marginBottom':'10px', 'marginTop':'-20px', 'width':'150px', 'marginLeft':'20px'}),
+                        dbc.Collapse(
+                            dbc.Card(
+                                dbc.CardBody(
+                                    AOA_checklist,
+                                )
+                            ),
+                            id="collapse_AOA",
+                            is_open=False
                         ),
-                        id="collapse_AOA",
-                        is_open=False
-                    ),
-                    html.Hr(),
-                    dbc.Button( "Image Processing", id="button_imageProcessing", n_clicks=0),
-                    dbc.Popover(
-                        [
-                            dbc.PopoverHeader("Image processing steps"),
-                            dbc.PopoverBody(dbc.Row([
-                                dbc.Col([
-                                    "image here",
-                                    html.Img(src=b64_image(image_path),height= "150px"),
-                                ])
-                            ])),
-                        ],
-                        id="popover_imageProcessing",
-                        # is_open=False,
-                        target="button_imageProcessing",
-                        # body=True,
-                        placement="right",
-                        trigger="legacy",
-                    ),
+                ]),
+
                     html.Div(id='hidden-output', style={'display': 'none'}),
                 ], width=4),
 
                 dbc.Col([
-                    
-                    html.Img(id="analysed-image", style={'max-width': '100%', 'max-height': '600px', 'width': 'auto', 'height': 'auto'}),
-                ], width=8),
-            ], align='center'),
+                    dbc.Tabs([
+                        dbc.Tab(tab1Content, label="Aerodynamisk analyse", tab_id="tab-1"),
+                        dbc.Tab(tab2Content, label="Billedanalyse", tab_id="tab-2"),
+                    ],
+                    id="tabs",
+                    active_tab="tab-1",
+                    ),
 
+                    # html.Img(id="analysed-image", style={'max-width': '100%', 'max-height': '600px', 'width': 'auto', 'height': 'auto'}),       
+                ], width=8),
+            ], align='start'),
         ])
     )
 ])
@@ -131,8 +112,8 @@ def parse_contents(contents, filename, date):
     return html.Div([
         # html.H5(filename),
         #HTML images accept base64 encoded strings in the same format that is supplied by the upload
-        html.Img(src=contents, style={'max-width': '100%', 'max-height': '475px', 'width': 'auto', 'height': 'auto'}),
-        dbc.Button("analyse Image", id='analyse-button', n_clicks=0),
+        html.Img(src=contents, style={'max-width': '100%', 'max-height': '475px', 'width': 'auto', 'height': 'auto','margin-bottom': '10px'}),
+        dbc.Button("Analyser tegning", id='analyse-button', n_clicks=0),
         html.Hr(),
 
     ])
