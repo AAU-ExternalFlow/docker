@@ -72,17 +72,21 @@ tab2Content = dbc.Card(
         [
             dbc.Row([
                 dbc.Col([
-                    html.Img(src=b64_image(image_path1),style={'max-width': '100%', 'max-height': '100%', 'width': 'auto', 'height': 'auto'}),
+                    dcc.Markdown('''Step 1: Rå billedbehandling'''),
+                    html.Img(src=b64_image(image_path1),style={'max-width': '100%', 'max-height': '275px', 'width': 'auto', 'height': 'auto','marginBottom':'20px'},className="mx-auto d-block"),
                     html.Br(),
-                    html.Img(src=b64_image(image_path2),style={'max-width': '100%', 'max-height': '100%', 'width': 'auto', 'height': 'auto'}),
+                    dcc.Markdown('''Step 3: Roter vingeprofil til angivne angrebsvinkler'''),
+                    html.Img(src=b64_image(image_path2),style={'max-width': '100%', 'max-height': '275px', 'width': 'auto', 'height': 'auto'},className="mx-auto d-block"),
                 ], width=6),
 
                 html.Hr(),
 
                 dbc.Col([
-                    html.Img(src=b64_image(image_path3),style={'max-width': '100%', 'max-height': '100%', 'width': 'auto', 'height': 'auto'}),
+                    dcc.Markdown('''Step 2: Konverter overflade til punkter i x-y koordinatsystem'''),
+                    html.Img(src=b64_image(image_path3),style={'max-width': '100%', 'max-height': '275px', 'width': 'auto', 'height': 'auto','marginBottom':'20px'},className="mx-auto d-block"),
                     html.Br(),
-                    html.Img(src=b64_image(image_path1),style={'max-width': '100%', 'max-height': '100%', 'width': 'auto', 'height': 'auto'}),
+                    dcc.Markdown('''Step 4: Omdan koordinater til 3D geometri'''),
+                    html.Img(src=b64_image(image_path1),style={'max-width': '100%', 'max-height': '275px', 'width': 'auto', 'height': 'auto'},className="mx-auto d-block"),
                 ], width=6)
             ]),
         ]
