@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Copenhagen
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# install essentials
+# Install essentials
 RUN apt-get update && apt-get install -y \
 		sudo \
 		wget \
@@ -14,32 +14,32 @@ RUN apt-get update && apt-get install -y \
 		build-essential \
 		software-properties-common
 
-#install python packages
+# Install python packages
 RUN apt-get update && apt-get install -y \
 		python3.10 \
 		python3-pip 
 		
-
 RUN pip install --upgrade pip
 
-ARG CACHEBUST=1
+# Create working directory
+RUN mkdir /externalflow/
+
 # Download dash web application
 RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
+RUN mv dashWebApp /externalflow/dashWebApp
 
 # Download image processing Python code
 RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
+RUN mv imageProcessing /externalflow/imageProcessing
 
-# # RUN python3 -m pip install -r dashWebApp/requirements.txt
-# RUN python3 -m pip install -r imageProcessing/requirements.txt
-COPY ./app /app
-WORKDIR /app
-# COPY ./dashWebApp /dashWebApp
-# WORKDIR /dashWebApp
-RUN python3 -m pip install -r requirements.txt 
-# RUN pip install --upgrade aerosandbox
-# --ignore-installed
+# Install Python packages
+RUN python3 -m pip install --ignore-installed -r externalflow/dashWebApp/requirements.txt
+RUN python3 -m pip install --ignore-installed -r externalflow/imageProcessing/requirements.txt
+
+# Set working dir
+WORKDIR /externalflow/dashWebApp
+
 ENV DASH_DEBUG_MODE False
-
 EXPOSE 8050
 CMD ["gunicorn", "-b", "0.0.0.0:8050", "--reload", "app:server"]
 
