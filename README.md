@@ -1,8 +1,10 @@
 ### Build image
-docker image build -t externalflow:latest .
-
-### (optional) Build image with Python cached
-docker image build --build-arg CACHEBUST=$(powershell -Command "[System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds()") -t externalflow:latest .
+``docker image build -t externalflow:latest .``
 
 ### Start docker container
-docker container run -ti --rm -v $HOME/externalflow/uploads:/externalflow/uploads -p 8050:8050 externalflow
+``docker container run -ti --rm -v $HOME/externalflow/uploads:/externalflow/uploads -p 8050:8050 -w /externalflow externalflow``
+
+### Now within the docker container start the web app:
+``python3 dashWebApp/app.py``
+
+### Now go to http://127.0.0.1:8050/
