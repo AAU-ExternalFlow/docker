@@ -58,8 +58,13 @@ RUN python3 -m pip install --ignore-installed -r externalflow/imageProcessing/re
 # Set working dir
 WORKDIR /externalflow
 
+# Change permissions
+USER root
+RUN chown -R extflow:extflow /externalflow
+
 # Change user to "extflow"
 USER extflow
+
 
 # Start the Dash web app automatically when the docker container is started
 # EXPOSE 8050
