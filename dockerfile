@@ -9,6 +9,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update && apt-get install -y \
 		sudo \
 		wget \
+		curl \
 		nano \
 		git \
 		build-essential \
@@ -21,10 +22,17 @@ RUN apt-get update && apt-get install -y \
 		
 RUN pip install --upgrade pip
 
+# Create working directory
+RUN mkdir /externalflow/
+
 # Download openfoam
 RUN wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash ;\
     apt-get install -y openfoam-default ;\
     rm -rf /var/lib/apt/lists/*
+
+# Download Paraview
+RUN wget -O - "https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v5.11&type=binary&os=Linux&downloadFile=ParaView-5.11.1-osmesa-MPI-Linux-Python3.9-x86_64.tar.gz" | tar -zxv
+RUN mv ParaView* paraview
 
 # Add new user "extflow"
 RUN useradd --user-group --create-home --shell /bin/bash extflow ;\
@@ -39,9 +47,6 @@ RUN sed -i '/export WM_PROJECT_USER_DIR=/cexport WM_PROJECT_USER_DIR="/externalf
 
 # Make sure to always run the following commands (no cache)
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcach
-
-# Create working directory
-RUN mkdir /externalflow/
 
 # Download dash web application
 RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
