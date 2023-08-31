@@ -25,6 +25,9 @@ RUN pip install --upgrade pip
 # Create working directory
 RUN mkdir /externalflow/
 
+# Set working dir
+WORKDIR /externalflow
+
 # Download openfoam
 RUN wget -q -O - https://dl.openfoam.com/add-debian-repo.sh | sudo bash ;\
     apt-get install -y openfoam-default ;\
@@ -57,11 +60,8 @@ RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
 RUN mv imageProcessing /externalflow/imageProcessing
 
 # Install Python packages
-RUN python3 -m pip install --ignore-installed -r externalflow/dashWebApp/requirements.txt
-RUN python3 -m pip install --ignore-installed -r externalflow/imageProcessing/requirements.txt
-
-# Set working dir
-WORKDIR /externalflow
+RUN python3 -m pip install --ignore-installed -r /externalflow/dashWebApp/requirements.txt
+RUN python3 -m pip install --ignore-installed -r /externalflow/imageProcessing/requirements.txt
 
 # Change permissions
 USER root
