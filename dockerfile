@@ -53,15 +53,13 @@ ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcach
 
 # Download dash web application
 RUN git clone https://github.com/AAU-ExternalFlow/dashWebApp.git
-RUN mv dashWebApp /externalflow/dashWebApp
 
 # Download image processing Python code
 RUN git clone https://github.com/AAU-ExternalFlow/imageProcessing.git
-RUN mv imageProcessing /externalflow/imageProcessing
 
 # Install Python packages
-RUN python3 -m pip install --ignore-installed -r /externalflow/dashWebApp/requirements.txt
-RUN python3 -m pip install --ignore-installed -r /externalflow/imageProcessing/requirements.txt
+RUN python3 -m pip install --ignore-installed -r dashWebApp/requirements.txt
+RUN python3 -m pip install --ignore-installed -r imageProcessing/requirements.txt
 
 # Change permissions
 USER root
