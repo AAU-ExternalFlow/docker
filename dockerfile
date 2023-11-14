@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install python packages
 RUN apt-get update && apt-get install -y \
-		python3.11.1 \
+		python3.11 \
 		python3-pip 
 		
 RUN pip install --upgrade pip
