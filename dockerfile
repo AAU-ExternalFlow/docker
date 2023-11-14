@@ -1,8 +1,9 @@
-FROM ubuntu:jammy
+FROM ubuntu:focal
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV TZ=Europe/Copenhagen
+
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install essentials
@@ -17,9 +18,9 @@ RUN apt-get update && apt-get install -y \
 
 # Install python packages
 RUN apt-get update && apt-get install -y \
-		python3.11 \
+		python3.10 \
 		python3-pip 
-		
+
 RUN pip install --upgrade pip
 
 # Create working directory
@@ -67,7 +68,6 @@ RUN chown -R extflow:extflow /externalflow
 
 # Change user to "extflow"
 USER extflow
-
 
 # Start the Dash web app automatically when the docker container is started
 # EXPOSE 8050
