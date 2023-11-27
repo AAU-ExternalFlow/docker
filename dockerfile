@@ -64,7 +64,14 @@ RUN python3 -m pip install --ignore-installed -r imageProcessing/requirements.tx
 
 # Change permissions
 USER root
-RUN chown -R extflow:extflow /externalflow
+RUN chown -R extflow:extflow /externalflow/dashWebApp
+RUN chown -R extflow:extflow /externalflow/imageProcessing
+RUN chown -R extflow:extflow /externalflow/uploads
+RUN chown -R extflow:extflow /externalflow/assets
+
+
+
+
 
 # Change user to "extflow"
 USER extflow
