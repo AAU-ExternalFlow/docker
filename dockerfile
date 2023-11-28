@@ -64,18 +64,17 @@ RUN python3 -m pip install --ignore-installed -r imageProcessing/requirements.tx
 
 # Change permissions
 USER root
-RUN chown -R extflow:extflow /externalflow/dashWebApp
-RUN chown -R extflow:extflow /externalflow/imageProcessing
-RUN chown -R extflow:extflow /externalflow/uploads
-RUN chown -R extflow:extflow /externalflow/assets
+# Exclude /externalflow/paraview from chown
+RUN find /externalflow ! -path '/externalflow/paraview*' -type d -exec chown extflow:extflow {} +
 
-
-
-
+# Perform chown for files within the excluded directory
+RUN find /externalflow -type f -exec chown extflow:extflow {} +
 
 # Change user to "extflow"
 USER extflow
 
 # Start the Dash web app automatically when the docker container is started
-# EXPOSE 8050
-# CMD ["python3", "dashWebApp/app.py"]
+EXPOSE 8050
+CMD ["python3", "dashWebApp/app.py"]
+
+
