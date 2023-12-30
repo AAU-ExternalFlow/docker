@@ -75,8 +75,8 @@ RUN chown -R extflow:extflow /externalflow
 USER extflow
 
 # Start the Dash web app automatically when the docker container is started
-EXPOSE 8050
+# EXPOSE 8050
 # CMD ["/bin/bash", "-c", "source /usr/lib/openfoam/openfoam/etc/bashrc && python3 dashWebApp/app.py"]
-CMD ["python3", "dashWebApp/app.py"]
+# CMD ["python3", "dashWebApp/app.py"]
 
 
